@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  tailor-db:
+    image: postgres:16
+    container_name: tailor-db
+    environment:
+      POSTGRES_USER: tailor_user
+      POSTGRES_PASSWORD: tailor_pass
+      POSTGRES_DB: tailor_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - tailor_db_data:/var/lib/postgresql/data
+
+  tailor_api:
+    build: ./tailor_api
+    container_name: tailor_api
+    depends_on:
+      - tailor-db
+    environment:
+      DATABASE_URL: ecto://tailor_user:tailor_pass@tailor-db/tailor_dev
+      SECRET_KEY_BASE: "a_very_secret_key_base"
+      MIX_ENV: dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./tailor_api:/app
+    command: >
+      sh -c "mix deps.get &&
+             mix ecto.create &&
+             mix ecto.migrate &&
+             mix phx.server"
+
+  tailor-frontend:
+    build: ./tailor-frontend
+    container_name: tailor-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./tailor-frontend:/app
+    stdin_open: true
+    tty: true
+
+volumes:
+  tailor_db_data:
