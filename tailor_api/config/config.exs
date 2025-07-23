@@ -39,6 +39,15 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Configure Guardian (JWT) and Ecto migrations defaults
+config :tailor_api, TailorApi.Guardian,
+  issuer: "tailor_api",
+  secret_key: "V/B6Mzzyu8sP52c1ngPjRo90Hj4WMGYhetqIk3AfAtZGCPXL5wNNDJLnRehnl2Zd"
+
+config :tailor_api, TailorApi.Repo,
+  migration_primary_key: [type: :binary_id],
+  migration_foreign_key: [type: :binary_id]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

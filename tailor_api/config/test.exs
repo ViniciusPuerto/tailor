@@ -6,10 +6,10 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :tailor_api, TailorApi.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "tailor_api_test#{System.get_env("MIX_TEST_PARTITION")}",
+  username: "tailor_user",
+  password: "tailor_pass",
+  hostname: "tailor-db",
+  database: "tailor_test",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
