@@ -1,12 +1,31 @@
 defmodule TailorApiWeb.Router do
   use TailorApiWeb, :router
 
+  pipeline :auth do
+    plug Guardian.Plug.Pipeline,
+      module: TailorApi.Guardian,
+      error_handler: TailorApiWeb.AuthErrorHandler
+
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  # Public API routes (no authentication required)
   scope "/api", TailorApiWeb do
-    pipe_through :api
+    pipe_through [:api]
+
+    post "/login", AuthController, :login
+  end
+
+  # Protected API routes (JWT authentication required)
+  scope "/api", TailorApiWeb do
+    pipe_through [:api, :auth]
+
+    resources "/orders", OrderController, except: [:new, :edit]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

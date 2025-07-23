@@ -28,6 +28,21 @@ defmodule TailorApiWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import TailorApiWeb.ConnCase
+
+      # Helper to add Authorization header with a valid JWT for the given user (or a new user)
+      @spec auth_conn(Plug.Conn.t(), TailorApi.Accounts.User.t() | nil) :: Plug.Conn.t()
+      def auth_conn(conn, user \\ nil) do
+        user =
+          case user do
+            nil ->
+              {:ok, user} = TailorApi.Accounts.register_user(%{email: "test_#{System.unique_integer()}@example.com", password: "password123"})
+              user
+            user -> user
+          end
+
+        {:ok, token, _claims} = TailorApi.Guardian.encode_and_sign(user)
+        Plug.Conn.put_req_header(conn, "authorization", "Bearer #{token}")
+      end
     end
   end
 
