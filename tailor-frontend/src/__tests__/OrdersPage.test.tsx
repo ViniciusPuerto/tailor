@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
 // Mock useAuth to prevent router invariant errors
-jest.mock('@/hooks/useAuth', () => jest.fn());
+jest.mock('@/hooks/useAuth', () => jest.fn(() => true));
 
 // Mock next/navigation router hooks
 jest.mock('next/navigation', () => ({

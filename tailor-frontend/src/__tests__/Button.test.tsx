@@ -11,4 +11,9 @@ describe('Button component', () => {
     const { container } = render(<Button>Primary</Button>);
     expect(container.firstChild).toHaveClass('bg-indigo-600');
   });
+
+  it('applies danger variant classes', () => {
+    const { container } = render(<Button variant="danger">Danger</Button>);
+    expect(container.firstChild).toHaveClass('bg-red-600');
+  });
 }); 

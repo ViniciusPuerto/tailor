@@ -14,7 +14,7 @@ import OrderForm from '@/components/orders/OrderForm';
 describe('OrderForm', () => {
   it('submits form and calls API', async () => {
     const onSuccess = jest.fn();
-    render(<OrderForm onSuccess={onSuccess} />);
+    render(<OrderForm onSuccess={onSuccess} onCancel={() => {}} />);
 
     fireEvent.change(screen.getByPlaceholderText('Customer Name'), { target: { value: 'John Doe' } });
 
