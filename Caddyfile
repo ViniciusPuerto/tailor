@@ -1,5 +1,4 @@
-:80 {
-  auto_https off
+http://:80 {
   encode gzip
   reverse_proxy /api/* tailor_api:4000
   reverse_proxy /* tailor-frontend:3000
