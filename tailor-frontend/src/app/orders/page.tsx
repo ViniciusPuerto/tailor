@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import api from '@/lib/api';
 import Button from '@/components/common/Button';
@@ -15,7 +16,8 @@ interface Order {
 }
 
 export default function OrdersPage() {
-  useAuth();
+  const router = useRouter();
+  const authenticated = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -28,21 +30,31 @@ export default function OrdersPage() {
   };
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (authenticated) {
+      fetchOrders();
+    }
+  }, [authenticated]);
 
   const handleDelete = async (id: string) => {
     await api.delete(`/orders/${id}`);
     fetchOrders();
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
+
   return (
     <div className="p-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Orders</h1>
-        <Button onClick={() => setOpen(true)}>New Order</Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setOpen(true)}>New Order</Button>
+          <Button variant="secondary" onClick={handleLogout}>Logout</Button>
+        </div>
       </div>
-      {loading ? (
+      {authenticated === null || loading ? (
         <p>Loading...</p>
       ) : (
         <table className="min-w-full divide-y divide-gray-200">
@@ -65,7 +77,7 @@ export default function OrdersPage() {
                 <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{o.status}</td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{o.priority}</td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm">
-                  <Button variant="secondary" onClick={() => handleDelete(o.id)}>
+                  <Button variant="danger" onClick={() => handleDelete(o.id)}>
                     Delete
                   </Button>
                 </td>
@@ -80,6 +92,7 @@ export default function OrdersPage() {
             setOpen(false);
             fetchOrders();
           }}
+          onCancel={() => setOpen(false)}
         />
       </Modal>
     </div>

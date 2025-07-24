@@ -6,6 +6,7 @@ import api from '@/lib/api';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import OrderForm from '@/components/orders/OrderForm';
+import Link from 'next/link';
 
 export default function OrderDetailPage() {
   useAuth();
@@ -39,12 +40,17 @@ export default function OrderDetailPage() {
   return (
     <div className="p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Order #{order.id}</h1>
+        <div className="flex items-center gap-4">
+          <Button variant="secondary" onClick={() => router.push('/orders')}>
+            Back
+          </Button>
+          <h1 className="text-2xl font-bold">Order #{order.id}</h1>
+        </div>
         <div className="space-x-2">
           <Button variant="secondary" onClick={() => setOpen(true)}>
             Edit
           </Button>
-          <Button variant="secondary" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete}>
             Delete
           </Button>
         </div>
@@ -68,6 +74,7 @@ export default function OrderDetailPage() {
             setOpen(false);
             fetchOrder();
           }}
+          onCancel={() => setOpen(false)}
         />
       </Modal>
     </div>

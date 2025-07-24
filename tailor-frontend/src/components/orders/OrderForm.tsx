@@ -6,6 +6,7 @@ import api from '@/lib/api';
 
 interface OrderFormProps {
   onSuccess: () => void;
+  onCancel: () => void;
   initialData?: Partial<OrderPayload>;
 }
 
@@ -30,7 +31,7 @@ export interface OrderPayload {
   payment_status: string;
 }
 
-const OrderForm: FC<OrderFormProps> = ({ onSuccess, initialData }) => {
+const OrderForm: FC<OrderFormProps> = ({ onSuccess, onCancel, initialData }) => {
   const [form, setForm] = useState<OrderPayload>({
     customer_name: initialData?.customer_name || '',
     customer_email: initialData?.customer_email || '',
@@ -101,9 +102,11 @@ const OrderForm: FC<OrderFormProps> = ({ onSuccess, initialData }) => {
       <TextInput placeholder="Status" value={form.status} onChange={handleChange('status')} required />
       <TextInput placeholder="Priority" value={form.priority} onChange={handleChange('priority')} required />
       {error && <p className="text-red-600 text-sm">{error}</p>}
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Saving...' : 'Save'}
-      </Button>
+      <div className="flex justify-end gap-2">
+        <Button type="submit" disabled={loading}>
+          {loading ? 'Saving...' : 'Save'}
+        </Button>
+      </div>
     </form>
   );
 };
