@@ -15,11 +15,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Run API tests
+      - name: Run API tests (Elixir)
         run: |
-          docker compose -f docker-compose.yml run --rm tailor_api mix test
+          docker compose -f docker-compose.yml run --rm -e MIX_ENV=test tailor_api \
+            sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix test"
 
-      - name: Run Front-end tests
+      - name: Run Front-end tests (Next.js)
         run: |
           docker compose -f docker-compose.yml run --rm tailor-frontend npm test -- --ci --passWithNoTests
 
