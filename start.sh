@@ -8,6 +8,7 @@
 # Usage:
 #   ./start.sh            # build + up (detached)
 #   ./start.sh --fresh    # also removes existing volumes for a clean DB
+#   ./start.sh --reset    # resets the database
 #
 set -euo pipefail
 
