@@ -42,7 +42,7 @@ services:
       context: ./tailor-frontend
       target: production
       args:
-        NEXT_PUBLIC_API_URL: https://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com/api
+        NEXT_PUBLIC_API_URL: http://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com/api
         API_INTERNAL_URL: http://tailor_api:4000/api
     container_name: tailor-frontend
     restart: always
@@ -64,7 +64,6 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data

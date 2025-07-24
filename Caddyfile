@@ -1,6 +1,6 @@
-ec2-18-229-255-81.sa-east-1.compute.amazonaws.com {
+:80 {
+  auto_https off
   encode gzip
-
   reverse_proxy /api/* tailor_api:4000
   reverse_proxy /* tailor-frontend:3000
 } 
