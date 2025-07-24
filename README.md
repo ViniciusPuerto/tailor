@@ -7,7 +7,7 @@ Everything is pre-containerised, so you can run the entire stack with a single D
 ---
 ## Live Demo
 
-Access the production environment → [http://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com:3000/login](http://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com:3000/login)
+Access the production environment → [http://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com/login](http://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com/login)
 
 ---
 ## 1. Prerequisites
