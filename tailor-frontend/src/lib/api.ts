@@ -14,7 +14,7 @@ const api = axios.create({
 
 // Attach token to every request (client side)
 if (typeof window !== 'undefined') {
-  api.interceptors.request.use((config: AxiosRequestConfig) => {
+  api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers = config.headers || {};
