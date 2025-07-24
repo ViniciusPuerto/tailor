@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  # Production Postgres database (data persisted in a named volume)
+  tailor-db:
+    image: postgres:16
+    container_name: tailor-db
+    restart: always
+    environment:
+      POSTGRES_USER: tailor_user
+      POSTGRES_PASSWORD: tailor_pass
+      POSTGRES_DB: tailor_prod
+    volumes:
+      - tailor_db_data:/var/lib/postgresql/data
+
+  # Phoenix API (Elixir) – compiled & run with MIX_ENV=prod
+  tailor_api:
+    build:
+      context: ./tailor_api
+    container_name: tailor_api
+    restart: always
+    depends_on:
+      - tailor-db
+    environment:
+      # NOTE: set SECRET_KEY_BASE in an .env file or via AWS secrets
+      DATABASE_URL: ecto://tailor_user:tailor_pass@tailor-db/tailor_prod
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      MIX_ENV: prod
+      PHX_HOST: ec2-18-228-255-81.sa-east-1.compute.amazonaws.com
+      PORT: 4000
+    expose:
+      - "4000"
+    command: >
+      sh -c "mix deps.get &&
+             mix compile &&
+             mix ecto.create &&
+             mix ecto.migrate &&
+             mix run priv/repo/seeds.exs &&
+             mix phx.server"
+
+  # Next.js Front-end – production build, served by Next server
+  tailor-frontend:
+    build:
+      context: ./tailor-frontend
+      target: production
+    container_name: tailor-frontend
+    restart: always
+    depends_on:
+      - tailor_api
+    environment:
+      NODE_ENV: production
+      # URL the browser should hit
+      NEXT_PUBLIC_API_URL: http://ec2-18-228-255-81.sa-east-1.compute.amazonaws.com:4000/api
+      # URL SSR uses inside Docker network
+      API_INTERNAL_URL: http://tailor_api:4000/api
+    ports:
+      - "3000:3000"
+
+volumes:
+  tailor_db_data: 
