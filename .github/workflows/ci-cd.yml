@@ -45,4 +45,4 @@ jobs:
             cd ~/tailor
             git pull origin main
             docker compose -f ${{ env.COMPOSE_FILE }} up -d --build
-            docker system prune -af --volumes --filter "until=24h" 
+            docker system prune -af --volumes
