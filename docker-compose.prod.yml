@@ -26,7 +26,7 @@ services:
       DATABASE_URL: ecto://tailor_user:tailor_pass@tailor-db/tailor_prod
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       MIX_ENV: prod
-      PHX_HOST: ec2-18-228-255-81.sa-east-1.compute.amazonaws.com
+      PHX_HOST: ec2-18-229-255-81.sa-east-1.compute.amazonaws.com
       PORT: 4000
     expose:
       - "4000"
@@ -50,7 +50,7 @@ services:
     environment:
       NODE_ENV: production
       # URL the browser should hit
-      NEXT_PUBLIC_API_URL: http://ec2-18-228-255-81.sa-east-1.compute.amazonaws.com:4000/api
+      NEXT_PUBLIC_API_URL: http://ec2-18-229-255-81.sa-east-1.compute.amazonaws.com:4000/api
       # URL SSR uses inside Docker network
       API_INTERNAL_URL: http://tailor_api:4000/api
     ports:
