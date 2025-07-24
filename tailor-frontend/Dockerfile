@@ -29,6 +29,13 @@ CMD ["npm", "run", "dev"]
 # Build image – production build
 ###############################
 FROM base AS builder
+
+# Inject API URLs at build time so Next.js can embed them
+ARG NEXT_PUBLIC_API_URL
+ARG API_INTERNAL_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV API_INTERNAL_URL=${API_INTERNAL_URL}
+
 COPY . .
 RUN npm run build
 
@@ -38,10 +45,12 @@ RUN npm run build
 FROM node:20-alpine AS production
 WORKDIR /app
 
+# Expected at runtime for SSR
+ENV NODE_ENV=production
+
 # Copy compiled output and node_modules from builder stage
 COPY --from=builder /app .
 
-ENV NODE_ENV=production
 EXPOSE 3000
 
 CMD ["npm", "start"] 
