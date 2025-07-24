@@ -48,7 +48,12 @@ defmodule TailorApiWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug CORSPlug,
-    origin: ["http://localhost:3000"],
+    origin: (
+      case System.get_env("CORS_ORIGINS") do
+        nil -> ["*"]
+        origins when is_binary(origins) -> String.split(origins, ",")
+      end
+    ),
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     headers: ["Authorization", "Content-Type", "Accept"],
     max_age: 86400
